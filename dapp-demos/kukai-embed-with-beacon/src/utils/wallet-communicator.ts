@@ -1,6 +1,6 @@
 
 import { DAppClient, NetworkType } from '@airgap/beacon-sdk';
-import { KukaiEmbed } from 'kukai-embed';
+import { KukaiEmbed } from '../../../../minified-builds/pre-build';
 import type { User } from '../modal/types';
 import { PROVIDERS } from './providers';
 
