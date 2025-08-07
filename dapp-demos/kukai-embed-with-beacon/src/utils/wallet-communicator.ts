@@ -1,13 +1,11 @@
 
 import { DAppClient, NetworkType } from '@airgap/beacon-sdk';
-import { KukaiEmbed } from 'kukai-embed';
+import { KukaiEmbed, Networks } from 'kukai-embed';
 import type { User } from '../modal/types';
 import { PROVIDERS } from './providers';
 
-const EXPERIMENTAL_NETWORK = 'https://feat-embed-objkt-v1.kukai-private.pages.dev'
-
 export class WalletCommunicator {
-    kukaiEmbedClient = new KukaiEmbed({ net: EXPERIMENTAL_NETWORK, icon: false });
+    kukaiEmbedClient = new KukaiEmbed({ net: Networks.ghostnet, icon: false });
     beaconClient = new DAppClient({ name: 'My Sample DApp', network: { type: NetworkType.GHOSTNET } });
     user: User | null = null;
 

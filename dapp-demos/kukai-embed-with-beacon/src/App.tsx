@@ -1,6 +1,6 @@
 import { BeaconEvent, DAppClient, PartialTezosOperation } from '@airgap/beacon-sdk';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { KukaiEmbed } from 'kukai-embed';
+import { KukaiEmbed, KukaiEmbedError, KukaiEmbedResponseError } from 'kukai-embed';
 import './App.css';
 import { User } from './modal/types';
 import { WalletCommunicator } from './utils/wallet-communicator';
@@ -14,10 +14,6 @@ enum APP_STATUS {
 
 const walletCommunicator = new WalletCommunicator();
 let attemptedInit = false
-
-type KukaiEmbedError = {
-  error: 'OTHER_WALLETS' | 'ABORTED_BY_USER'
-}
 
 export default function App() {
   const [status, setStatus] = useState(APP_STATUS.LOADING);
@@ -74,11 +70,17 @@ export default function App() {
 
   async function handleSend() {
     setResponse('');
-    const { provider } = user!;
-    const response: any = provider === PROVIDERS.BEACON
-      ? await beaconClient.current?.requestOperation({ operationDetails: DEFAULT_PAYLOAD as unknown as PartialTezosOperation[] })
-      : await kukaiEmbedClient.current?.send(DEFAULT_PAYLOAD);
-    setResponse(response?.transactionHash || response);
+    try {
+      const { provider } = user!;
+      const response: any = provider === PROVIDERS.BEACON
+        ? await beaconClient.current?.requestOperation({ operationDetails: DEFAULT_PAYLOAD as unknown as PartialTezosOperation[] })
+        : await kukaiEmbedClient.current?.send(DEFAULT_PAYLOAD);
+      setResponse(response?.transactionHash || response);
+    } catch (error) {
+      if (error instanceof KukaiEmbedError) {
+        console.log('>>', error.errorMessage, error.error, error.errorId);
+      }
+    }
   }
 
   async function handleLogin(withParams?: boolean): Promise<PROVIDERS | undefined> {
@@ -86,11 +88,14 @@ export default function App() {
       let kukaiEmbedResponse
       try {
         kukaiEmbedResponse = withParams
-          ? await kukaiEmbedClient.current?.login({ authParams: { id: "my-dapp", nonce: "sample nonce" } })
-          : await kukaiEmbedClient.current?.login();
+          ? await kukaiEmbedClient.current?.login({ template: 'objkt', authParams: { id: "my-dapp", nonce: "sample nonce" } })
+          : await kukaiEmbedClient.current?.login({ template: 'objkt' });
       } catch (exception) {
-        const typedError = (exception as KukaiEmbedError).error
-        if (typedError === 'OTHER_WALLETS') {
+        if (!(exception instanceof KukaiEmbedError)) {
+          // handle other exceptions
+          return;
+        }
+        if (exception.error === KukaiEmbedResponseError.OTHER_WALLETS) {
           const beaconResponse = await beaconClient.current?.requestPermissions();
           if (!beaconResponse) {
             return;
