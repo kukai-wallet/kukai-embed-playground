@@ -1,10 +1,12 @@
+import { TezosOperationType } from "@airgap/beacon-sdk"
+
 export function formatAddress(value: string) {
     return `${value.substring(0, 4)}...${value.substring(value.length - 4)}`
 }
 
 export const DEFAULT_PAYLOAD = [
     {
-        "kind": "transaction",
+        "kind": "transaction" as TezosOperationType.TRANSACTION,
         "amount": "12345",
         "destination": "tz1arY7HNDq17nrZJ7f3sikxuHZgeopsU9xq"
     }
