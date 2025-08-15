@@ -2578,10 +2578,10 @@ keyvaluestorage-interface@^1.0.0:
   resolved "https://registry.yarnpkg.com/keyvaluestorage-interface/-/keyvaluestorage-interface-1.0.0.tgz#13ebdf71f5284ad54be94bd1ad9ed79adad515ff"
   integrity sha512-8t6Q3TclQ4uZynJY9IGr2+SsIGwK9JHcO6ootkHCGA0CrQCRy+VkouYNO2xicET6b9al7QKzpebNow+gkpCL8g==
 
-kukai-embed@^0.9.4:
-  version "0.9.4"
-  resolved "https://registry.yarnpkg.com/kukai-embed/-/kukai-embed-0.9.4.tgz#7ee79c510a70091cc81822af4f2edd49cbfa75ad"
-  integrity sha512-I3c2LNeGx+7DODbuvXkRTBruoGT6LvIa6G7CfXGAFyGqZAWKIgsN2ZtctrGFPHvsPeUL3RXn92WpbD93A/60Aw==
+kukai-embed@0.9.5:
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/kukai-embed/-/kukai-embed-0.9.5.tgz#cc6f9984281c49f99328e39c8565a7175258cfbb"
+  integrity sha512-sOuGTsnVaZgcstntzxRwALrgwpJYgOeIIHF0IV9kcvjTQwC0JeW9AJgsPfQy5I0O/CXEmcL+h/4gbRpVLLrtGQ==
 
 levn@^0.4.1:
   version "0.4.1"

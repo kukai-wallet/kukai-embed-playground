@@ -12,6 +12,8 @@ enum APP_STATUS {
   READY
 }
 
+const KUKAI_EMBED_ACCOUNT_KEY = "kukai-embed-account";
+
 const walletCommunicator = new WalletCommunicator();
 let attemptedInit = false
 
@@ -40,6 +42,22 @@ export default function App() {
     })
   }, [])
 
+  const handleKukaiEmbedSync = useCallback(() => {
+    addEventListener("storage", async (event: StorageEvent) => {
+      if (!event) {
+        return;
+      }
+      if (event?.key === KUKAI_EMBED_ACCOUNT_KEY && Boolean(event.newValue) !== Boolean(event.oldValue)) {
+        const loginInfo = await kukaiEmbedClient.current?.sync();
+        if (!loginInfo) {
+          setUser(null);
+        } else {
+          setUser({ provider: PROVIDERS.KUKAI_EMBED, address: loginInfo.pkh, name: (loginInfo.userData as Record<string, string>).name })
+        }
+      }
+    })
+  }, [])
+
   useEffect(() => {
     if (status === APP_STATUS.READY || attemptedInit) {
       return;
@@ -52,10 +70,11 @@ export default function App() {
         beaconClient.current = payload.beaconClient;
         kukaiEmbedClient.current = payload.kukaiEmbedClient as unknown as KukaiEmbed;
         setBeaconListener();
+        handleKukaiEmbedSync();
         setStatus(APP_STATUS.READY);
       })
       .catch(console.warn)
-  }, [status, setBeaconListener])
+  }, [status, setBeaconListener, handleKukaiEmbedSync])
 
   async function handleLogout() {
     const { provider } = user!;
