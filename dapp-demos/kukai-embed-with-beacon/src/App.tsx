@@ -47,7 +47,7 @@ export default function App() {
       if (!event) {
         return;
       }
-      if (event.key === KUKAI_EMBED_ACCOUNT_KEY && Boolean(event.newValue) !== Boolean(event.oldValue)) {
+      if (event.key === KUKAI_EMBED_ACCOUNT_KEY) {
         const loginInfo = await kukaiEmbedClient.current?.sync();
         if (!loginInfo) {
           setUser(null);
